@@ -1,150 +1,170 @@
-\# Nagios and Zabbix Monitoring Project
+# Nagios & Zabbix Infrastructure Monitoring
 
+A hands-on DevOps project demonstrating the deployment and configuration of two popular infrastructure monitoring solutions: **Nagios Core** and **Zabbix**.
 
+The monitoring environment was deployed on Ubuntu 22.04 virtual machines using Vagrant and Oracle VirtualBox.
 
-\## Project Overview
+---
 
-This project demonstrates the implementation of an infrastructure monitoring environment using \*\*Nagios Core\*\* and \*\*Zabbix\*\* on Ubuntu 22.04 virtual machines.
+## Project Overview
 
+The project focuses on monitoring Linux infrastructure, checking host availability, tracking system resources, and validating monitoring data through web-based dashboards.
 
+### Project Objectives
 
-The environment was deployed using \*\*Vagrant\*\* and \*\*Oracle VirtualBox\*\*.
+- Monitor host availability and service status.
+- Track Linux system resources and performance metrics.
+- Configure remote monitoring between monitoring and target hosts.
+- Verify monitoring functionality using Nagios and Zabbix dashboards.
 
+---
 
+## Technologies & Tools
 
-\## Project Objectives
+| Technology | Purpose |
+|---|---|
+| Ubuntu 22.04 LTS | Operating System |
+| Vagrant | Virtual Machine Provisioning |
+| Oracle VirtualBox | Virtualization Platform |
+| Nagios Core 4.5.9 | Infrastructure Monitoring |
+| NRPE 4.0.3 | Remote Host Monitoring |
+| Zabbix 7.0 | Infrastructure Monitoring |
+| MariaDB | Zabbix Database |
+| Apache | Web Server |
 
-\- Monitor host availability and service status.
+---
 
-\- Monitor Linux system resources.
+## Infrastructure Architecture
 
-\- Configure remote monitoring between monitoring and target hosts.
-
-\- Validate monitoring results through both web interfaces.
-
-
-
-\## Technologies Used
-
-\- Ubuntu 22.04 LTS
-
-\- Vagrant
-
-\- Oracle VirtualBox
-
-\- Nagios Core 4.5.9
-
-\- NRPE 4.0.3
-
-\- Zabbix 7.0
-
-\- MariaDB
-
-\- Apache Web Server
-
-
-
-\## Infrastructure
-
-
-
-| Machine | IP Address | Role |
-
+| Hostname | IP Address | Role |
 |---|---|---|
+| `monitor01` | `192.168.56.17` | Nagios & Zabbix Server |
+| `web01` | `192.168.56.11` | Remote Linux Host |
 
-| monitor01 | 192.168.56.17 | Nagios and Zabbix monitoring server |
-
-| web01 | 192.168.56.11 | Remote Linux host monitored by Nagios |
-
-
-
-\## Nagios Implementation
-
-\- Installed and configured Nagios Core.
-
-\- Configured host and service monitoring.
-
-\- Monitored local services and system resources.
-
-\- Configured NRPE on the remote host.
-
-\- Verified remote NRPE connectivity.
-
-\- Confirmed that the remote host and CPU Load service were reporting correctly.
-
-
-
-\## Zabbix Implementation
-
-\- Installed Zabbix Server, Frontend, Agent, and MariaDB.
-
-\- Configured the Zabbix database and frontend.
-
-\- Added `monitor01` as a monitored host.
-
-\- Linked the \*\*Linux by Zabbix agent\*\* template.
-
-\- Verified agent connectivity and collected monitoring data.
-
-
-
-\## Validation
-
-The implementation was tested using:
-
-\- Nagios web interface and service status.
-
-\- NRPE connectivity test.
-
-\- Zabbix agent connectivity using `zabbix\_get`.
-
-\- Zabbix Latest Data to verify collected metrics.
-
-
-
-\## Screenshots
-
-
-
-\### Nagios Services
-
-!\[Nagios Services](Screenshots/Nagios-Services.jpeg)
-
-
-
-\### Zabbix Latest Data
-
-!\[Zabbix Latest Data](Screenshots/Zabbix-Latest-Data.jpeg)
-
-
-
-\## Repository Structure
+**Monitoring Architecture:**
 
 ```text
-
-Nagios-Zabbix-Monitoring/
-
-├── README.md
-
-├── Vagrantfile
-
-├── .gitignore
-
-├── Screenshots/
-
-│   ├── Nagios-Services.jpeg
-
-│   └── Zabbix-Latest-Data.jpeg
-
-├── nagios/
-
-└── zabbix/
-
+             Monitoring Environment
+                      |
+               +-------------+
+               |  monitor01  |
+               | 192.168.56.17|
+               +-------------+
+                  /       \
+                 /         \
+          Nagios Core    Zabbix Server
+              |               |
+             NRPE          Zabbix Agent
+              |               |
+              +-------+-------+
+                      |
+                +-----------+
+                |   web01   |
+                |192.168.56.11|
+                +-----------+
 ```
 
+---
 
+## Nagios Implementation
 
-\## Conclusion
+The Nagios monitoring environment includes:
 
-This project demonstrates the deployment of two monitoring solutions and the configuration of local and remote Linux host monitoring. Both Nagios and Zabbix were successfully tested through their respective interfaces.
+- Installation and configuration of Nagios Core.
+- Host and service monitoring configuration.
+- Monitoring of local Linux services and system resources.
+- NRPE installation and configuration on the remote host.
+- Remote connectivity verification.
+- Monitoring of the remote host's CPU Load.
 
+### Nagios Validation
+
+Remote NRPE connectivity was verified successfully:
+
+```bash
+/usr/local/nagios/libexec/check_nrpe -H 192.168.56.11
+```
+
+Expected response:
+
+```text
+NRPE v4.0.3
+```
+
+### Nagios Dashboard
+
+![Nagios Services](Screenshots/Nagios-Services.jpeg)
+
+---
+
+## Zabbix Implementation
+
+The Zabbix monitoring environment includes:
+
+- Installation of Zabbix Server, Frontend, Agent, and MariaDB.
+- Database configuration and frontend setup.
+- Configuration of the Zabbix monitoring host.
+- Linking the **Linux by Zabbix agent** template.
+- Collection of Linux performance metrics.
+- Verification of agent connectivity and monitoring data.
+
+### Zabbix Validation
+
+Agent connectivity was tested using:
+
+```bash
+zabbix_get -s 192.168.56.17 -p 10050 -k agent.ping
+```
+
+Expected response:
+
+```text
+1
+```
+
+### Zabbix Dashboard
+
+![Zabbix Latest Data](Screenshots/Zabbix-Latest-Data.jpeg)
+
+---
+
+## Testing & Validation
+
+The monitoring environment was validated through:
+
+| Test | Result |
+|---|---|
+| Nagios service checks | Successful |
+| Remote host availability | Successful |
+| NRPE connectivity | Successful |
+| Zabbix agent connectivity | Successful |
+| Zabbix Latest Data collection | Successful |
+
+---
+
+## Repository Structure
+
+```text
+Nagios-Zabbix-Monitoring/
+│
+├── README.md
+├── Vagrantfile
+├── .gitignore
+│
+├── Screenshots/
+│   ├── Nagios-Services.jpeg
+│   └── Zabbix-Latest-Data.jpeg
+│
+├── nagios/
+└── zabbix/
+```
+
+---
+
+## Conclusion
+
+This project demonstrates the practical implementation of Nagios and Zabbix for Linux infrastructure monitoring.
+
+It covers virtual machine provisioning, monitoring server configuration, remote host monitoring, agent connectivity, and validation of collected monitoring data.
+
+**Both monitoring solutions were successfully deployed and tested.**
