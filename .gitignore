@@ -1,0 +1,6 @@
+.vagrant/
+*.log
+.env
+*.sql
+*.sql.gz
+.DS_Store
